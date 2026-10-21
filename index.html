@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任泽明 — AI Agent 开发者 / 产品经理 / 运营</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap');
+
+  :root {
+    --blue: #0000FF;
+    --blue-dark: #000099;
+    --blue-deep: #000066;
+    --white: #FFFFFF;
+    --off-white: #F8F8F8;
+    --text-dark: #000066;
+    --text-light: #FFFFFF;
+    --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    color: var(--text-dark);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Navbar ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--blue);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  nav .logo {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 900; color: var(--white);
+    letter-spacing: 0.5px;
+  }
+  nav .logo span { font-style: italic; font-weight: 400; }
+  nav .nav-links { display: flex; gap: 32px; align-items: center; }
+  nav .nav-links a {
+    color: rgba(255,255,255,0.85); text-decoration: none;
+    font-size: 13px; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  nav .nav-links a:hover { color: var(--white); }
+  nav .nav-cta {
+    background: var(--white); color: var(--blue);
+    padding: 10px 24px; border-radius: 2px;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  nav .nav-cta:hover { opacity: 0.85; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--blue);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-content { flex: 1; max-width: 640px; position: relative; z-index: 2; }
+  .hero-tag {
+    display: inline-block;
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.4); padding: 6px 16px;
+    border-radius: 2px; margin-bottom: 32px; font-weight: 500;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 900; line-height: 0.95;
+    margin-bottom: 28px; letter-spacing: -1px;
+  }
+  .hero h1 em { font-style: italic; font-weight: 400; }
+  .hero p {
+    font-size: 17px; line-height: 1.8;
+    color: rgba(255,255,255,0.85);
+    max-width: 540px; margin-bottom: 40px;
+  }
+  .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
+  .btn-primary {
+    background: var(--white); color: var(--blue);
+    padding: 14px 32px; border-radius: 2px;
+    font-size: 14px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform 0.15s, opacity 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent; color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    padding: 14px 32px; border-radius: 2px;
+    font-size: 14px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--white); }
+
+  .hero-terminal {
+    background: rgba(0,0,0,0.35); border-radius: 6px;
+    max-width: 520px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .hero-terminal .term-bar {
+    background: rgba(255,255,255,0.08);
+    padding: 8px 14px; display: flex; gap: 6px; align-items: center;
+  }
+  .hero-terminal .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .hero-terminal .term-dot.r { background: #ff5f57; }
+  .hero-terminal .term-dot.y { background: #febc2e; }
+  .hero-terminal .term-dot.g { background: #28c840; }
+  .hero-terminal .term-title {
+    margin-left: 12px; font-size: 11px; color: rgba(255,255,255,0.5);
+    font-family: var(--mono);
+  }
+  .hero-terminal .term-body {
+    padding: 16px 20px; font-family: var(--mono); font-size: 13px;
+    color: rgba(255,255,255,0.9); line-height: 1.8;
+  }
+  .hero-terminal .term-body .prompt { color: #7dd3fc; }
+  .hero-terminal .term-body .cmd { color: #fff; }
+  .hero-terminal .term-body .out { color: rgba(255,255,255,0.6); }
+
+  /* Hero illustration */
+  .hero-illustration {
+    flex: 0 0 420px; position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-illustration img {
+    width: 100%; max-width: 420px; height: auto;
+    border-radius: 4px;
+    filter: contrast(1.1);
+  }
+
+  /* ── Section common ── */
+  section { padding: 100px 48px; }
+  .section-label {
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    font-weight: 600; margin: 0 auto 12px; max-width: 1200px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900; line-height: 1.05;
+    margin: 0 auto 48px; max-width: 1200px; letter-spacing: -0.5px;
+  }
+
+  /* ── About / Education ── */
+  .about { background: var(--white); color: var(--text-dark); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .about-card {
+    border: 1.5px solid var(--blue);
+    border-radius: 4px; padding: 36px;
+  }
+  .about-card h3 {
+    font-family: var(--serif); font-size: 24px; font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .about-card .meta {
+    font-size: 13px; color: var(--blue); font-weight: 600;
+    letter-spacing: 0.5px; margin-bottom: 12px;
+  }
+  .about-card p { font-size: 15px; line-height: 1.7; color: #333; }
+  .about-card ul { list-style: none; margin-top: 12px; }
+  .about-card ul li {
+    font-size: 14px; padding: 4px 0; color: #444;
+    padding-left: 16px; position: relative;
+  }
+  .about-card ul li::before {
+    content: '—'; position: absolute; left: 0; color: var(--blue); font-weight: 700;
+  }
+
+  /* ── Skills ── */
+  .skills { background: var(--blue); color: var(--white); }
+  .skills .section-label { color: rgba(255,255,255,0.6); }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px; max-width: 1100px; margin: 0 auto;
+  }
+  .skill-group h4 {
+    font-family: var(--serif); font-size: 20px; font-weight: 700;
+    margin-bottom: 16px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 14px; border-radius: 2px;
+    font-size: 13px; font-weight: 500;
+    transition: background 0.2s;
+  }
+  .skill-tag:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── Projects ── */
+  .projects { background: var(--off-white); color: var(--text-dark); }
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 28px; max-width: 1200px; margin: 0 auto;
+  }
+  .project-card {
+    background: var(--white);
+    border: 1.5px solid rgba(0,0,255,0.15);
+    border-radius: 4px; padding: 32px;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+  }
+  .project-card:hover {
+    border-color: var(--blue);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,255,0.1);
+  }
+  .project-num {
+    font-family: var(--serif); font-size: 14px; font-weight: 700;
+    color: var(--blue); letter-spacing: 2px; margin-bottom: 12px;
+  }
+  .project-card h3 {
+    font-family: var(--serif); font-size: 22px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .project-role {
+    font-size: 12px; color: var(--blue); font-weight: 600;
+    letter-spacing: 0.5px; margin-bottom: 16px;
+  }
+  .project-card p {
+    font-size: 14px; line-height: 1.7; color: #444; margin-bottom: 16px;
+  }
+  .project-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .project-tech span {
+    font-size: 11px; background: rgba(0,0,255,0.06);
+    color: var(--blue-deep); padding: 3px 10px; border-radius: 2px;
+    font-weight: 500;
+  }
+  .project-link {
+    font-size: 13px; font-weight: 600; color: var(--blue);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .project-link:hover { text-decoration: underline; }
+
+  /* ── Experience ── */
+  .experience { background: var(--blue); color: var(--white); }
+  .experience .section-label { color: rgba(255,255,255,0.6); }
+  .exp-list { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+  .exp-item {
+    border-left: 2px solid rgba(255,255,255,0.3);
+    padding-left: 32px; position: relative;
+  }
+  .exp-item::before {
+    content: ''; position: absolute; left: -7px; top: 6px;
+    width: 12px; height: 12px; background: var(--white); border-radius: 50%;
+  }
+  .exp-item h3 {
+    font-family: var(--serif); font-size: 22px; font-weight: 700; margin-bottom: 4px;
+  }
+  .exp-item .exp-meta {
+    font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .exp-item ul { list-style: none; }
+  .exp-item ul li {
+    font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.85);
+    padding: 3px 0; padding-left: 18px; position: relative;
+  }
+  .exp-item ul li::before {
+    content: '▸'; position: absolute; left: 0; color: rgba(255,255,255,0.5);
+  }
+
+  /* ── Awards ── */
+  .awards { background: var(--white); color: var(--text-dark); }
+  .awards-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  .award-card {
+    border: 1.5px solid rgba(0,0,255,0.15);
+    border-radius: 4px; padding: 24px;
+    display: flex; align-items: flex-start; gap: 16px;
+    transition: border-color 0.2s;
+  }
+  .award-card:hover { border-color: var(--blue); }
+  .award-icon {
+    font-size: 28px; flex-shrink: 0; line-height: 1;
+  }
+  .award-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .award-card p { font-size: 13px; color: #666; }
+
+  /* ── Contact ── */
+  .contact { background: var(--blue); color: var(--white); text-align: center; }
+  .contact .section-label { color: rgba(255,255,255,0.6); }
+  .contact h2 {
+    font-family: var(--serif); font-size: clamp(36px, 5vw, 56px);
+    font-weight: 900; margin-bottom: 20px;
+  }
+  .contact p {
+    font-size: 17px; color: rgba(255,255,255,0.8);
+    max-width: 500px; margin: 0 auto 40px;
+  }
+  .contact-links {
+    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .contact-link {
+    color: var(--white); text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    padding: 12px 28px; border-radius: 2px;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .contact-link:hover { background: rgba(255,255,255,0.1); border-color: var(--white); }
+  .footer {
+    margin-top: 60px; padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-size: 12px; color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    nav { padding: 14px 24px; }
+    nav .nav-links { display: none; }
+    .hero { flex-direction: column; padding: 100px 24px 60px; text-align: center; }
+    .hero-content { max-width: 100%; }
+    .hero p { margin-left: auto; margin-right: auto; }
+    .hero-buttons { justify-content: center; }
+    .hero-terminal { margin: 0 auto; }
+    .hero-illustration { display: none; }
+    section { padding: 64px 24px; }
+    .about-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">REN <span>ZEMING</span></div>
+  <div class="nav-links">
+    <a href="#about">关于</a>
+    <a href="#skills">技能</a>
+    <a href="#projects">项目</a>
+    <a href="#experience">经历</a>
+    <a href="#awards">荣誉</a>
+  </div>
+  <a href="#contact" class="nav-cta">联系我</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-tag">AI Agent · Product · Operations</div>
+    <h1>The Builder<br>That Grows<br><em>With You</em></h1>
+    <p>软件工程专业本科生，聚焦 AI Agent、大模型应用与产品落地。独立完成 ZMAI SWE Agent、Friday 桌面助手、ZMRAG 知识库等开源项目，覆盖任务规划、工具调用、多模型接入、记忆与失败恢复全链路。具备 C 端 AI 产品实习与账号运营经验。</p>
+    <div class="hero-buttons">
+      <a href="#projects" class="btn-primary">↓ 查看项目</a>
+      <a href="https://github.com/lip20041219" target="_blank" class="btn-secondary">GitHub</a>
+    </div>
+    <div class="hero-terminal">
+      <div class="term-bar">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+        <span class="term-title">zeming@friday — zsh</span>
+      </div>
+      <div class="term-body">
+        <span class="prompt">➜</span> <span class="cmd">whoami</span><br>
+        <span class="out">ren zeming — ai agent developer / pm / ops</span><br>
+        <span class="prompt">➜</span> <span class="cmd">ls ~/projects</span><br>
+        <span class="out">zmai/  friday/  zmrag/  matuxue/  paotui/  aiot-sort/</span><br>
+        <span class="prompt">➜</span> <span class="cmd">_</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-illustration">
+    <img src="hero-illustration.jpg" alt="Classical engraving style multi-armed deity illustration">
+  </div>
+</section>
+
+<!-- About / Education -->
+<section class="about" id="about">
+  <div class="section-label" style="color:var(--blue)">01 — 关于我</div>
+  <h2 class="section-title">教育与背景</h2>
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>柳州工学院</h3>
+      <div class="meta">信息科学与工程学院 · 软件工程 · 本科 · 2023.09 – 2027.07</div>
+      <p>绩点 7.21/9 · 专业前 15% · 导师：梁宏健</p>
+      <ul>
+        <li>Python / Java 程序设计</li>
+        <li>数据结构与算法</li>
+        <li>操作系统 · 计算机网络</li>
+        <li>数据库概论 · Web 应用开发</li>
+        <li>Spring Boot 框架 · 软件质量与测试</li>
+      </ul>
+    </div>
+    <div class="about-card">
+      <h3>个人定位</h3>
+      <div class="meta">AI Agent 开发者 / 产品经理 / 运营</div>
+      <p>聚焦 AI Agent、大模型应用与产品落地，独立完成从需求分析到部署上线的全流程交付。深度使用 Claude Code、Codex、Hermes 等 AI 编程工具，具备扎实的工程基础与产品思维。</p>
+      <ul>
+        <li>独立开源 2 万行级 Python SWE Agent Runtime</li>
+        <li>C 端 AI 产品实习（200W+ 用户）</li>
+        <li>抖音职场垂类账号运营（40W 播放爆款）</li>
+        <li>英语 CET4，可中英日常交流</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section class="skills" id="skills">
+  <div class="section-label">02 — 技能栈</div>
+  <h2 class="section-title">技术能力</h2>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <h4>编程语言</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span><span class="skill-tag">Java</span>
+        <span class="skill-tag">JavaScript</span><span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">SQL</span><span class="skill-tag">Bash</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>后端框架</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">FastAPI</span><span class="skill-tag">Flask</span>
+        <span class="skill-tag">Spring Boot</span><span class="skill-tag">Spring AI</span>
+        <span class="skill-tag">RESTful API</span><span class="skill-tag">WebSocket</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>前端 &amp; 桌面</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">Vue</span><span class="skill-tag">React</span>
+        <span class="skill-tag">Node.js</span><span class="skill-tag">Electron</span>
+        <span class="skill-tag">UniApp</span><span class="skill-tag">HTML/CSS</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>AI / Agent</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">LLM API</span><span class="skill-tag">LangGraph</span>
+        <span class="skill-tag">LangChain</span><span class="skill-tag">Tool Calling</span>
+        <span class="skill-tag">ReAct</span><span class="skill-tag">RAG</span>
+        <span class="skill-tag">Multi-Agent</span><span class="skill-tag">MCP</span>
+        <span class="skill-tag">Prompt Engineering</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>数据 &amp; 检索</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">MySQL</span><span class="skill-tag">SQLite</span>
+        <span class="skill-tag">BM25</span><span class="skill-tag">Embedding</span>
+        <span class="skill-tag">Hybrid Retrieval</span><span class="skill-tag">Reranker</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>视觉 &amp; IoT</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">OpenCV</span><span class="skill-tag">TensorFlow</span>
+        <span class="skill-tag">Keras</span><span class="skill-tag">MobileNetV3</span>
+        <span class="skill-tag">MQTT</span><span class="skill-tag">边缘部署</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>工程 &amp; 运维</h4>
+      <div class="skill-tags">
+        <span class="skill-tag">Git/GitHub</span><span class="skill-tag">pytest</span>
+        <span class="skill-tag">CI/CD</span><span class="skill-tag">Linux</span>
+        <span class="skill-tag">Docker</span><span class="skill-tag">Ruff</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section class="projects" id="projects">
+  <div class="section-label" style="color:var(--blue)">03 — 项目经历</div>
+  <h2 class="section-title">六个项目，<br>一条 Agent 进化线</h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-num">#1 AGENT</div>
+      <h3>ZMAI — 轻量级 SWE Agent</h3>
+      <div class="project-role">独立开发 / 开源 · 2026.07 – 2026.09</div>
+      <p>针对 Agent 误判完成、缺乏验证、失败无法恢复三大问题，设计 Runtime 控制层。基于 LangGraph 图式编排，实现执行约束、状态控制、结果验证、失败恢复完整链路。</p>
+      <div class="project-tech">
+        <span>Python</span><span>LangGraph</span><span>LLM API</span><span>Tool Calling</span>
+      </div>
+      <p style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px;">SWE-bench Lite 真实跑通 8 实例 resolved 4 个（50%）· 23 类对抗测试 0 错误完成</p>
+      <a href="https://github.com/lip20041219/zmai" target="_blank" class="project-link">GitHub →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">#2 DESKTOP</div>
+      <h3>Friday — 本地桌面 AI 助手</h3>
+      <div class="project-role">独立开发 / 开源 · 2026.07 – 2026.09</div>
+      <p>搭建桌面 AI Agent 执行框架，FastAPI + WebSocket + Electron 打通前后端。80+ 工具、12 插件组、9 角色 Agent 矩阵，三级权限管理，SQLite 持久化记忆 + 语义检索。</p>
+      <div class="project-tech">
+        <span>FastAPI</span><span>Electron</span><span>React</span><span>WebSocket</span><span>SQLite</span>
+      </div>
+      <p style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px;">工具调用成功率 91.2% · 端到端任务完成率 100%</p>
+      <a href="https://github.com/lip20041219/Friday" target="_blank" class="project-link">GitHub →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">#3 RAG</div>
+      <h3>ZMRAG — 轻量级 RAG 知识库</h3>
+      <div class="project-role">独立开发 / 开源 · 2026.08 – 2026.09</div>
+      <p>Document→Chunk→Embedding→Retrieval→Reranking→LLM→Citation 完整链路。BM25 + Embedding 混合检索，Weighted Fusion + CrossEncoder Reranker，建立 Recall@K / MRR / MAP / NDCG 评测体系。</p>
+      <div class="project-tech">
+        <span>Python</span><span>BM25</span><span>Embedding</span><span>Hybrid Retrieval</span><span>Reranker</span>
+      </div>
+      <p style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px;">Weighted Fusion MRR 0.750 · Reranker 后 MRR 0.8125 · 1289 项自动化测试全绿</p>
+      <a href="https://github.com/lip20041219/ZMRAG" target="_blank" class="project-link">GitHub →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">#4 EDUCATION</div>
+      <h3>码途智学 — AI 编程学习助手</h3>
+      <div class="project-role">独立开发 / 公网部署 · 2026.03 – 2026.05</div>
+      <p>面向中小学生的 Python 编程 AI 纠错系统。「错误提醒→引导提问→思路拆解→知识点」四步渐进式引导，避免直接给答案。代码训练、错误数据库、智能学习路径三大模块。</p>
+      <div class="project-tech">
+        <span>Flask</span><span>FastAPI</span><span>MySQL</span><span>Vue</span><span>Node.js</span><span>LLM API</span>
+      </div>
+      <p style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px;">Token 认证 + CSRF 防护 + 限流 · 入围中国大学生计算机设计大赛</p>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">#5 FULLSTACK</div>
+      <h3>校园互助跑腿系统</h3>
+      <div class="project-role">全栈开发</div>
+      <p>前后端分离架构。Spring Boot + MyBatis-Plus 后端，Vue3 + Element Plus 管理端，UniApp 微信小程序。订单全生命周期 + 纠纷仲裁 + 财务管理 + AI 智能助手。</p>
+      <div class="project-tech">
+        <span>Spring Boot</span><span>Vue3</span><span>UniApp</span><span>MyBatis-Plus</span><span>MySQL</span>
+      </div>
+      <p style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px;">发单→支付→抢单→配送→确认→评价全链路打通</p>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">#6 AIoT</div>
+      <h3>AIoT 智能视觉分拣系统</h3>
+      <div class="project-role">数据增强 / 模型训练 · 2026.09</div>
+      <p>集图像采集、深度学习推理、MQTT 通信与硬件控制于一体。OpenCV 预处理 + MobileNetV3-Large 四分类 + 有限状态机控制机械臂，端到端分拣闭环。</p>
+      <div class="project-tech">
+        <span>Python</span><span>OpenCV</span><span>TensorFlow</span><span>MobileNetV3</span><span>MQTT</span><span>Flask</span>
+      </div>
+      <p style="font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px;">292→1752 张数据增强 · 验证集准确率 97% · 边缘部署推理延迟极低</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Experience -->
+<section class="experience" id="experience">
+  <div class="section-label">04 — 实习与经历</div>
+  <h2 class="section-title">真实战场</h2>
+  <div class="exp-list">
+
+    <div class="exp-item">
+      <h3>炫图（广州）人工智能科技有限公司</h3>
+      <div class="exp-meta">AI 应用工程师（实习）· 2025.12 – 2026.03</div>
+      <ul>
+        <li>参与注册用户 200W+ 的炫图 AI 移动端美甲、美手等图像功能开发，完成用户操作、任务调用、结果生成与展示业务流程</li>
+        <li>针对美手效果过度美化、美甲样式与用户选择不一致等问题，调整 AI 任务参数与生成方案，提升生成结果匹配度</li>
+        <li>参与 AI 图片生成效果与性能优化，在生成效果、响应速度和处理开销之间取得平衡</li>
+        <li>单条 AI 美手功能作品最高 40 万播放、6k+ 点赞，有效提升用户留存与会员订阅率</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <h3>抖音「胡尔摩斯探职」— 账号运营</h3>
+      <div class="exp-meta">职场垂类账号运营负责人 · 2025.07 – 2025.09</div>
+      <ul>
+        <li>全流程参与内容体系搭建、选题策划、脚本创作、流量运营与商业合作对接</li>
+        <li>搭建职场垂类标准化选题库，结合 AI 工具完成内容脚本创作，累计产出 50+ 作品</li>
+        <li>打造单条 40 万播放爆款，账号整体曝光提升 200%，平均完播率 +15%，粉丝互动率 +8%</li>
+        <li>建立「数据复盘—策略优化」闭环运营体系，沉淀精细化运营与数据驱动决策能力</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- Awards -->
+<section class="awards" id="awards">
+  <div class="section-label" style="color:var(--blue)">05 — 竞赛与荣誉</div>
+  <h2 class="section-title">认可与证明</h2>
+  <div class="awards-grid">
+    <div class="award-card">
+      <div class="award-icon">🏆</div>
+      <div>
+        <h4>中国高校计算机大赛全国总决赛</h4>
+        <p>三等奖 · 2026</p>
+      </div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">🥈</div>
+      <div>
+        <h4>全国高校计算机能力挑战赛</h4>
+        <p>省级三等奖 · 2025</p>
+      </div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">🥇</div>
+      <div>
+        <h4>柳州软件设计与开发大赛</h4>
+        <p>一等奖 · 2025</p>
+      </div>
+    </div>
+    <div class="award-card">
+      <div class="award-icon">📜</div>
+      <div>
+        <h4>Google AI Essentials</h4>
+        <p>认证证书</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="section-label">06 — 联系方式</div>
+  <h2>Let's Build<br>Something Together</h2>
+  <p>对 AI Agent、大模型应用或产品运营有兴趣？随时联系我。</p>
+  <div class="contact-links">
+    <a href="mailto:lip20041219@gmail.com" class="contact-link">✉ lip20041219@gmail.com</a>
+    <a href="tel:18579990620" class="contact-link">☎ 18579990620</a>
+    <a href="https://github.com/lip20041219" target="_blank" class="contact-link">⌨ GitHub</a>
+    <a href="https://x.com/lip_1219" target="_blank" class="contact-link">𝕏 @lip_1219</a>
+  </div>
+  <div class="footer">
+    © 2026 REN ZEMING · CRAFTED WITH AGENT-FIRST ENGINEERING
+  </div>
+</section>
+
+</body>
+</html>
