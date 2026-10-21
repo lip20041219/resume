@@ -308,6 +308,40 @@
   .award-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
   .award-card p { font-size: 13px; color: #666; }
 
+  /* ── Core Strengths ── */
+  .strengths { background: var(--off-white); color: var(--text-dark); }
+  .strengths-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px; max-width: 1200px; margin: 0 auto;
+  }
+  .strength-card {
+    background: var(--white);
+    border: 1.5px solid rgba(0,0,255,0.15);
+    border-radius: 4px; padding: 36px;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .strength-card:hover {
+    border-color: var(--blue);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,255,0.1);
+  }
+  .strength-num {
+    font-family: var(--serif); font-size: 14px; font-weight: 700;
+    color: var(--blue); letter-spacing: 2px; margin-bottom: 12px;
+  }
+  .strength-card h3 {
+    font-family: var(--serif); font-size: 24px; font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .strength-card ul { list-style: none; }
+  .strength-card ul li {
+    font-size: 14px; line-height: 1.7; color: #444;
+    padding: 6px 0; padding-left: 18px; position: relative;
+  }
+  .strength-card ul li::before {
+    content: '—'; position: absolute; left: 0; color: var(--blue); font-weight: 700;
+  }
+
   /* ── Contact ── */
   .contact { background: var(--blue); color: var(--white); text-align: center; }
   .contact .section-label { color: rgba(255,255,255,0.6); }
@@ -494,9 +528,47 @@
   </div>
 </section>
 
+<!-- Core Strengths -->
+<section class="strengths" id="strengths">
+  <div class="section-label" style="color:var(--blue)">03 — 核心优势</div>
+  <h2 class="section-title">三大能力，<br>一条工程主线</h2>
+  <div class="strengths-grid">
+    <div class="strength-card">
+      <div class="strength-num">#1 ENGINEERING</div>
+      <h3>工程能力</h3>
+      <ul>
+        <li>熟练 Java / Python，扎实的数据结构与算法基础</li>
+        <li>全栈开发：Vue / Node.js / Spring Boot / Spring AI</li>
+        <li>熟练 SQL / Git / Linux，有完整全栈项目经验</li>
+        <li>能独立完成从需求分析到验证上线的全流程</li>
+      </ul>
+    </div>
+    <div class="strength-card">
+      <div class="strength-num">#2 AI</div>
+      <h3>AI 能力</h3>
+      <ul>
+        <li>轻量级 RAG 知识库、AI Agent 框架探索与开源</li>
+        <li>熟悉 Tool Calling / LangGraph / MCP 协议 / Runtime</li>
+        <li>深度使用 Claude Code / Codex 等 AI 编程工具</li>
+        <li>能完成代码生成、调试优化与工作流自动化</li>
+      </ul>
+    </div>
+    <div class="strength-card">
+      <div class="strength-num">#3 PRODUCT</div>
+      <h3>产品与运营</h3>
+      <ul>
+        <li>C 端产品业务经历，审美好，能做 UI 设计</li>
+        <li>抖音职场垂类账号运营，单条 40W 播放爆款</li>
+        <li>责任心强，执行力好，时间管理与团队协作</li>
+        <li>中英双语沟通，学习能力强，主动跟进前沿技术</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- Projects -->
 <section class="projects" id="projects">
-  <div class="section-label" style="color:var(--blue)">03 — 项目经历</div>
+  <div class="section-label" style="color:var(--blue)">04 — 项目经历</div>
   <h2 class="section-title">六个项目，<br>一条 Agent 进化线</h2>
   <div class="projects-grid">
 
@@ -574,7 +646,7 @@
 
 <!-- Experience -->
 <section class="experience" id="experience">
-  <div class="section-label">04 — 实习与经历</div>
+  <div class="section-label">05 — 实习与经历</div>
   <h2 class="section-title">真实战场</h2>
   <div class="exp-list">
 
@@ -605,7 +677,7 @@
 
 <!-- Awards -->
 <section class="awards" id="awards">
-  <div class="section-label" style="color:var(--blue)">05 — 竞赛与荣誉</div>
+  <div class="section-label" style="color:var(--blue)">06 — 竞赛与荣誉</div>
   <h2 class="section-title">认可与证明</h2>
   <div class="awards-grid">
     <div class="award-card">
@@ -641,7 +713,7 @@
 
 <!-- Contact -->
 <section class="contact" id="contact">
-  <div class="section-label">06 — 联系方式</div>
+  <div class="section-label">07 — 联系方式</div>
   <h2>Let's Build<br>Something Together</h2>
   <p>对 AI Agent、大模型应用或产品运营有兴趣？随时联系我。</p>
   <div class="contact-links">
