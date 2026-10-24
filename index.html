@@ -329,6 +329,33 @@
   }
   .award-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
   .award-card p { font-size: 13px; color: #666; }
+  .cert-link {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    color: var(--blue); text-decoration: none; margin-top: 6px;
+  }
+  .cert-link:hover { text-decoration: underline; }
+
+  /* Lightbox */
+  .lightbox {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,51,0.92); z-index: 100000;
+    align-items: center; justify-content: center;
+    padding: 24px; cursor: zoom-out;
+  }
+  .lightbox.active { display: flex; animation: fadeIn 0.25s ease; }
+  .lightbox img {
+    max-width: 90%; max-height: 90vh; border-radius: 6px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.5); cursor: default;
+  }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 28px;
+    color: white; font-size: 36px; font-weight: 300;
+    cursor: pointer; line-height: 1; user-select: none;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 
   /* ── Core Strengths ── */
   .strengths { background: var(--off-white); color: var(--text-dark); }
@@ -707,14 +734,16 @@
       <div class="award-icon">🏆</div>
       <div>
         <h4>中国高校计算机大赛全国总决赛</h4>
-        <p>三等奖 · 2026</p>
+        <p>三等奖 · 2026 · 团体程序设计天梯赛</p>
+        <a href="#" class="cert-link" onclick="openLightbox('cert-ccc.jpg');return false;">查看证书 →</a>
       </div>
     </div>
     <div class="award-card">
       <div class="award-icon">🥈</div>
       <div>
         <h4>全国高校计算机能力挑战赛</h4>
-        <p>省级三等奖 · 2025</p>
+        <p>省级三等奖 · 2025 · AIGC创意设计赛</p>
+        <a href="#" class="cert-link" onclick="openLightbox('cert-ability.jpg');return false;">查看证书 →</a>
       </div>
     </div>
     <div class="award-card">
@@ -752,6 +781,12 @@
   </div>
 </section>
 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+  <img id="lightbox-img" src="" alt="证书">
+</div>
+
 <script>
   // Scroll reveal animation
   const observer = new IntersectionObserver((entries) => {
@@ -763,6 +798,21 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Lightbox
+  function openLightbox(src) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lightbox-img').src = src;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
 </script>
 
 </body>
